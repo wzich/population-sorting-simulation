@@ -1,5 +1,19 @@
 const UPDATES_PER_SEC = 20;
 const SHAPE_WIDTH = 10;
+const MAX_SPEED = 50;
+const ATTRACTOR_STRENGTH = 30000;
+
+const palette = {
+  'blue': '#00B9AE',
+  'black': '#03120E',
+  'green': '#71B340',
+  'coral': '#FA824C',
+  'red': '#D7263D'
+};
+
+function getHex(name) {
+  return palette[name];
+}
 
 function getDistance(point1, point2) {
   let vector_x = point1.x-point2.x;
@@ -91,9 +105,14 @@ class Shape extends ShapeCollection {
       proximity_x = proximity_x - force_x;
       proximity_y = proximity_y - force_y;
     }
-    // let unitVector = getUnitVector({x: proximity_x, y: proximity_y});
-    this.vector_x = (500-this.x)/55000-proximity_x;
-    this.vector_y = (500-this.y)/55000-proximity_y;
+    this.vector_x = (500-this.x)/ATTRACTOR_STRENGTH-proximity_x;
+    this.vector_y = (500-this.y)/ATTRACTOR_STRENGTH-proximity_y;
+    let magnitude = Math.sqrt(this.vector_x ** 2 + this.vector_y ** 2)
+    if (magnitude * ATTRACTOR_STRENGTH > MAX_SPEED) {
+      let unitVector = getUnitVector({x: this.vector_x, y: this.vector_y});
+      this.vector_x = unitVector.x * MAX_SPEED / ATTRACTOR_STRENGTH;
+      this.vector_y = unitVector.y * MAX_SPEED / ATTRACTOR_STRENGTH;
+    }
   }
 }
 
@@ -105,10 +124,12 @@ function genRandomShape() {
 }
 
 collection = new ShapeCollection({
-  'red': 100,
-  'blue': 100,
-  'green': 100
+  'red': 15,
+  'green': 17,
+  'coral': 5,
+  'blue': 20
 });
+
 let shapes = collection.getAll();
 const start = new Date().getTime() / 1000;
 
@@ -126,7 +147,7 @@ function draw() {
     ctx.arc(circPos.x, circPos.y, SHAPE_WIDTH, 0, 2*Math.PI);
     ctx.lineWidth = 1;
     ctx.stroke();
-    ctx.fillStyle = shape.type;
+    ctx.fillStyle = getHex(shape.type);
     ctx.fill();
   }
 

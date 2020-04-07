@@ -1,11 +1,29 @@
 <link rel="stylesheet" href="shapeists.css">
-<div>
-  <input title='Attractor Strength' id='ATTRACTOR_STRENGTH' type='range' name='ATTRACTOR_STRENGTH'></input>
-  <label for='ATTRACTOR_STRENGTH'>attractor strength</label>
-</div>
-<div>
-  <input title='Racism Severity Coefficient' id='RACISM_SEVERITY' type='range' name='RACISM_SEVERITY'></input>
-  <label for='RACISM_SEVERITY'>racism severity coefficient</label>
+<div class='control-panel'>
+  <div>
+    <label for='ATTRACTOR_STRENGTH'>attractor strength</label>
+    <input title='Attractor Strength' id='ATTRACTOR_STRENGTH' type='range' name='ATTRACTOR_STRENGTH'></input>
+  </div>
+  <div>
+    <label for='RACISM_SEVERITY'>racism severity coefficient</label>
+    <input title='Racism Severity Coefficient' id='RACISM_SEVERITY' type='range' name='RACISM_SEVERITY'></input>
+  </div>
+  <h2>populations:</h2>
+  <div>
+    <label for='RED_POPULATION'>red population</label>
+    <input value=100 id='RED_POPULATION' type='range' name='RED_POPULATION'></input>
+  </div>
+  <div>
+    <label for='BLUE_POPULATION'>blue population</label>
+    <input value=70 id='BLUE_POPULATION' type='range' name='BLUE_POPULATION'></input>
+  </div>
+  <div>
+    <label for='YELLOW_POPULATION'>yellow population</label>
+    <input value=0 id='YELLOW_POPULATION' type='range' name='YELLOW_POPULATION'></input>
+  </div>
+  <div>
+    <input value='Generate' type="button" onclick="generate()"></input>
+  </div>
 </div>
 <canvas width="1000" height="1000" id="canvas"></canvas>
 <script src="shapeists.js"></script>

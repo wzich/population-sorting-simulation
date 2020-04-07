@@ -8,10 +8,57 @@ body {
   color: white;
   font-family: "Helvetica", sans-serif;
   /* font-weight: bolder; */
-  font-size: 1.5em;
-  font-variant: small-caps;
+}
+
+.control-panel {
+  /* width: 450px; */
+  float: right;
+  width: calc(100vw - 100vh);
+  max-width: 500px;
+  border: solid 1px gray;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+canvas {
+  height: 100vh;
+  width: 100vh;
 }
 
 label {
   display: inline-block;
+  font-size: 1.2em;
+  /* font-variant: small-caps; */
+}
+
+input[type='range'] {
+  float: right;
+}
+
+h2 {
+  margin: 5px 0;
+  text-align: center;
+  font-variant: small-caps;
+}
+
+input[type='button'] {
+  display: block;
+  width: 300px;
+  height: 35px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  margin: 10px auto;
+  font-size: 1.5em;
+  background-color: hsla(360, 0%, 100%, 0.4);
+  transition: background-color 0.3s;
+}
+
+input[type='button']:hover {
+  background-color: hsla(360, 0%, 100%, 0.6);
+  transition: background-color 0.3s;
+}
+
+input[type='button']:focus {
+  outline: 0;
 }

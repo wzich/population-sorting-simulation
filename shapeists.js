@@ -14,7 +14,8 @@ const palette = {
   'black': '#03120E',
   'green': '#71B340',
   'coral': '#FA824C',
-  'red': '#D7263D'
+  'red': '#D7263D',
+  'yellow': '#FFFB46'
 };
 
 function getHex(name) {
@@ -143,20 +144,7 @@ class Shape extends ShapeCollection {
   }
 }
 
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
 
-function genRandomShape() {
-  return new Shape (['yellow', 'blue', 'red', 'green'][Math.floor(Math.random()*4)], {x: 500, y: 500}, {x: 3*Math.random()-0.5, y: 3*Math.random()-0.5}, 10);
-}
-
-collection = new ShapeCollection({
-  'red': 100,
-  'blue': 70
-});
-
-let shapes = collection.getAll();
-const start = new Date().getTime() / 1000;
 
 // Draw all shapes on canvas
 function draw() {
@@ -179,5 +167,35 @@ function draw() {
   window.requestAnimationFrame(draw);
 
 }
+
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+function genRandomShape() {
+  return new Shape (['yellow', 'blue', 'red', 'green'][Math.floor(Math.random()*4)], {x: 500, y: 500}, {x: 3*Math.random()-0.5, y: 3*Math.random()-0.5}, 10);
+}
+
+let collection = new ShapeCollection({
+  'red': 100,
+  'blue': 70
+});
+
+let shapes = collection.getAll();
+
+function generate() {
+  let RED_POPULATION = parseInt(document.getElementById('RED_POPULATION').value);
+  let BLUE_POPULATION = parseInt(document.getElementById('BLUE_POPULATION').value);
+  let YELLOW_POPULATION = parseInt(document.getElementById('YELLOW_POPULATION').value);
+  console.log([RED_POPULATION, BLUE_POPULATION, YELLOW_POPULATION]);
+  collection = new ShapeCollection({
+    'red': RED_POPULATION,
+    'blue': BLUE_POPULATION,
+    'yellow': YELLOW_POPULATION
+  });
+  shapes = collection.getAll();
+  console.log(shapes.length);
+}
+
+const start = new Date().getTime() / 1000;
 
 window.requestAnimationFrame(draw);

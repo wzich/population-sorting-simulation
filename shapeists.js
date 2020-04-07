@@ -1,7 +1,13 @@
 const UPDATES_PER_SEC = 20;
 const SHAPE_WIDTH = 10;
-const MAX_SPEED = 50;
-const ATTRACTOR_STRENGTH = 30000;
+const MAX_SPEED = 30;
+const ATTRACTOR_STRENGTH = 50000;
+
+const ATTRACTOR_STRENGTH_MINIMUM = 5000;
+const ATTRACTOR_STRENGTH_MAXIMUM = 95000;
+
+const RACISM_SEVERITY_MIN = 1;
+const RACISM_SEVERITY_MAX = 5;
 
 const palette = {
   'blue': '#00B9AE',
@@ -13,6 +19,21 @@ const palette = {
 
 function getHex(name) {
   return palette[name];
+}
+
+function getValueOf(input) {
+  let value = document.getElementById(input).value;
+  switch (input) {
+    case 'ATTRACTOR_STRENGTH':
+      return (1 - value/100) * (ATTRACTOR_STRENGTH_MAXIMUM - ATTRACTOR_STRENGTH_MINIMUM) + ATTRACTOR_STRENGTH_MINIMUM;
+      break;
+    case 'RACISM_SEVERITY':
+      return (value/100) * (RACISM_SEVERITY_MAX - RACISM_SEVERITY_MIN) + RACISM_SEVERITY_MIN;
+      break;
+    default:
+      console.log('Unknown input: ' + input);
+      break;
+  }
 }
 
 function getDistance(point1, point2) {
@@ -68,14 +89,14 @@ class Shape extends ShapeCollection {
   }
 
   updatePosition(t) {
-    if ((this.x + this.vector_x * t) > 20 && (this.x + this.vector_x * t < 980)) {
-      this.x = this.x + (this.vector_x * t);
-    }
-    if ((this.y + this.vector_y * t > 20) && (this.y + this.vector_y * t < 980)) {
-      this.y = this.y + (this.vector_y * t);
-    }
-    // this.x = this.x + (this.vector_x * t);
-    // this.y = this.y + (this.vector_y * t);
+    // if ((this.x + this.vector_x * t) > 20 && (this.x + this.vector_x * t < 980)) {
+    //   this.x = this.x + (this.vector_x * t);
+    // }
+    // if ((this.y + this.vector_y * t > 20) && (this.y + this.vector_y * t < 980)) {
+    //   this.y = this.y + (this.vector_y * t);
+    // }
+    this.x = this.x + (this.vector_x * t);
+    this.y = this.y + (this.vector_y * t);
   }
 
   getPosition() {
@@ -90,6 +111,7 @@ class Shape extends ShapeCollection {
   updateVector(allShapes) {
     let proximity_x = 0;
     let proximity_y = 0;
+    let currentRacismSeverity = getValueOf('RACISM_SEVERITY');
     for (var shape of allShapes) {
       if ((shape.x == this.x) && (shape.y == this.y)) {
         continue;
@@ -99,19 +121,24 @@ class Shape extends ShapeCollection {
       let force_x = Math.sign(this.x - shape.x) / distsq;
       let force_y = Math.sign(this.y - shape.y) / distsq;
       if (shape.type != this.type) {
-        force_x = force_x * 3;
-        force_y = force_y * 3;
+        force_x = force_x * currentRacismSeverity;
+        force_y = force_y * currentRacismSeverity;
       }
       proximity_x = proximity_x - force_x;
       proximity_y = proximity_y - force_y;
     }
-    this.vector_x = (500-this.x)/ATTRACTOR_STRENGTH-proximity_x;
-    this.vector_y = (500-this.y)/ATTRACTOR_STRENGTH-proximity_y;
+    let currentAttractorStrength = getValueOf('ATTRACTOR_STRENGTH');
+    this.vector_x = (500-this.x)/currentAttractorStrength-proximity_x;
+    this.vector_y = (500-this.y)/currentAttractorStrength-proximity_y;
     let magnitude = Math.sqrt(this.vector_x ** 2 + this.vector_y ** 2)
-    if (magnitude * ATTRACTOR_STRENGTH > MAX_SPEED) {
+    if (magnitude * currentAttractorStrength > MAX_SPEED) {
       let unitVector = getUnitVector({x: this.vector_x, y: this.vector_y});
-      this.vector_x = unitVector.x * MAX_SPEED / ATTRACTOR_STRENGTH;
-      this.vector_y = unitVector.y * MAX_SPEED / ATTRACTOR_STRENGTH;
+      this.vector_x = unitVector.x * MAX_SPEED / currentAttractorStrength;
+      this.vector_y = unitVector.y * MAX_SPEED / currentAttractorStrength;
+      magnitude = Math.sqrt(this.vector_x ** 2 + this.vector_y ** 2);
+    }
+    if (Math.random() < (1/10000)) {
+      // console.log(magnitude * ATTRACTOR_STRENGTH);
     }
   }
 }
@@ -124,10 +151,8 @@ function genRandomShape() {
 }
 
 collection = new ShapeCollection({
-  'red': 15,
-  'green': 17,
-  'coral': 5,
-  'blue': 20
+  'red': 100,
+  'blue': 70
 });
 
 let shapes = collection.getAll();

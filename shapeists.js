@@ -186,11 +186,15 @@ function generate() {
   let RED_POPULATION = parseInt(document.getElementById('RED_POPULATION').value);
   let BLUE_POPULATION = parseInt(document.getElementById('BLUE_POPULATION').value);
   let YELLOW_POPULATION = parseInt(document.getElementById('YELLOW_POPULATION').value);
+  let GREEN_POPULATION = parseInt(document.getElementById('GREEN_POPULATION').value);
+  let CORAL_POPULATION = parseInt(document.getElementById('CORAL_POPULATION').value);
   console.log([RED_POPULATION, BLUE_POPULATION, YELLOW_POPULATION]);
   collection = new ShapeCollection({
     'red': RED_POPULATION,
     'blue': BLUE_POPULATION,
-    'yellow': YELLOW_POPULATION
+    'yellow': YELLOW_POPULATION,
+    'green': GREEN_POPULATION,
+    'coral': CORAL_POPULATION
   });
   shapes = collection.getAll();
   console.log(shapes.length);

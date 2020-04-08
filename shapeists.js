@@ -1,4 +1,4 @@
-const UPDATES_PER_SEC = 20;
+const UPDATES_PER_SEC = 30;
 const SHAPE_WIDTH = 10;
 const MAX_SPEED = 30;
 const ATTRACTOR_STRENGTH = 50000;
@@ -55,7 +55,7 @@ class ShapeCollection {
   constructor(distribution) {
     this.distrubtion = distribution;
     this.shapes = {};
-    for (var type in distribution) {
+    for (const type in distribution) {
       let pos = {
         x: 500 + 700 * (Math.random() - 0.5),
         y: 500 + 700 * (Math.random() - 0.5)
@@ -66,8 +66,8 @@ class ShapeCollection {
 
   getAll() {
     let allShapes = [];
-    for (var type in this.shapes) {
-      for (var shape of this.shapes[type]) {
+    for (const type in this.shapes) {
+      for (const shape of this.shapes[type]) {
         allShapes.push(shape);
       }
     }
@@ -113,7 +113,7 @@ class Shape extends ShapeCollection {
     let proximity_x = 0;
     let proximity_y = 0;
     let currentRacismSeverity = getValueOf('RACISM_SEVERITY');
-    for (var shape of allShapes) {
+    for (const shape of allShapes) {
       if ((shape.x == this.x) && (shape.y == this.y)) {
         continue;
       }
@@ -148,15 +148,16 @@ class Shape extends ShapeCollection {
 
 // Draw all shapes on canvas
 function draw() {
-  var now = new Date().getTime() / 1000;
+  let now = new Date().getTime() / 1000;
   timeElapsed = now - start;
 
+  let all = collection.getAll()
   ctx.clearRect(0, 0, 1000, 1000);
-  for (var shape of shapes) {
+  for (const shape of shapes) {
     ctx.beginPath();
     // avgPositionsByType = collection.getAvgPositionsByType()
-    shape.updateVector(collection.getAll());
-    var circPos = shape.updateAndGetPosition(timeElapsed);
+    shape.updateVector(all);
+    let circPos = shape.updateAndGetPosition(timeElapsed);
     ctx.arc(circPos.x, circPos.y, SHAPE_WIDTH, 0, 2*Math.PI);
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -168,8 +169,8 @@ function draw() {
 
 }
 
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
 
 function genRandomShape() {
   return new Shape (['yellow', 'blue', 'red', 'green'][Math.floor(Math.random()*4)], {x: 500, y: 500}, {x: 3*Math.random()-0.5, y: 3*Math.random()-0.5}, 10);
@@ -183,21 +184,18 @@ let collection = new ShapeCollection({
 let shapes = collection.getAll();
 
 function generate() {
-  let RED_POPULATION = parseInt(document.getElementById('RED_POPULATION').value);
-  let BLUE_POPULATION = parseInt(document.getElementById('BLUE_POPULATION').value);
-  let YELLOW_POPULATION = parseInt(document.getElementById('YELLOW_POPULATION').value);
-  let GREEN_POPULATION = parseInt(document.getElementById('GREEN_POPULATION').value);
-  let CORAL_POPULATION = parseInt(document.getElementById('CORAL_POPULATION').value);
-  console.log([RED_POPULATION, BLUE_POPULATION, YELLOW_POPULATION]);
-  collection = new ShapeCollection({
-    'red': RED_POPULATION,
-    'blue': BLUE_POPULATION,
-    'yellow': YELLOW_POPULATION,
-    'green': GREEN_POPULATION,
-    'coral': CORAL_POPULATION
-  });
+  let populationValues = {
+    'red': parseInt(document.getElementById('RED_POPULATION').value),
+    'blue': parseInt(document.getElementById('BLUE_POPULATION').value),
+    'yellow': parseInt(document.getElementById('YELLOW_POPULATION').value),
+    'green': parseInt(document.getElementById('GREEN_POPULATION').value),
+    'coral': parseInt(document.getElementById('CORAL_POPULATION').value)
+  };
+
+  collection = new ShapeCollection(populationValues);
   shapes = collection.getAll();
-  console.log(shapes.length);
+  console.log("New shape populations:");
+  console.log(populationValues);
 }
 
 const start = new Date().getTime() / 1000;
